@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>분석 결과</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container result-page">
+        <header class="result-header" style="position:relative;">
+            <div class="image-gallery-container">
+            <div class="gallery-title">
+                <span class="badge">1</span> 추출된 이미지 3d화 하려면 클릭
+            </div>
+            <div class="image-gallery">
+                <!-- Images will be loaded here by JS -->
+            </div>
+            <script>
+            window.imageFilesFromServer = {{ image_files | tojson }};
+            // (선택) 이미지 basePath를 서버 설정에 맞춰 지정
+            window.imageBasePathFromServer = "{{ url_for('static', filename='output_images/') }}";
+            
+            document.addEventListener("DOMContentLoaded", () => {
+                // main.js 의 initGallery가 존재하면 초기화
+                if (window.initGallery && Array.isArray(window.imageFilesFromServer)) {
+                window.initGallery({ files: window.imageFilesFromServer, basePath: window.imageBasePathFromServer || '/output_images' });
+                // 자동 렌더링을 원하면 현재 페이지 변수 넣어 호출
+                // 예: window.updateGallery(current_page);
+                }
+            });
+            </script>
+            </div>
+        </header>
+        <div class="result-body">
+            <main class="main-content">
+                <div class="slide-view-container">
+                     <div class="slide-title">
+                        <span class="badge">3</span> pdf 슬라이드 뷰어
+                    </div>
+                    <div id="slide-image-container">
+                    </div>
+                </div>
+            </main>
+
+            <aside class="right-sidebar">
+                <div class="tab-container">
+                    <div class="tab-nav">
+                        <button class="tab-link active" onclick="openTab(event, 'transcript')"><span class="badge">2</span> 대본</button>
+                        <button class="tab-link" onclick="openTab(event, 'summary')"><span class="badge">4</span> AI 요약</button>
+                    </div>
+
+                    <div id="transcript" class="tab-content active">
+                        <h3>해당 페이지 대사 스크립트 전문</h3>
+                        <div class="transcript-content" id="transcript-content">
+                            <!-- JavaScript로 동적으로 렌더링될 내용 -->
+                        </div>
+                    </div>
+                    <script id="transcript-data" type="application/json">
+                        {{ transcript_data.segments | tojson }}
+                    </script>
+
+                    <div id="summary" class="tab-content">
+                        <h3>AI 요약 결과</h3>
+                        <div class="summary-content">
+                                <div class="pdf-info">
+                                    <p><strong>PDF 파일명:</strong> {{ pdf_data.filename }}</p>
+                                    <p><strong>총 페이지 수:</strong> {{ pdf_data.total_pages }}</p>
+                                </div>
+                                <div class="pdf-text">
+                                    <h4>AI 내용:</h4>
+                                    <div class="ai-content" id="ai-content">
+                                        <!-- JavaScript로 동적으로 렌더링될 내용 -->
+                                    </div>
+                                    <script id="ai-data" type="application/json">
+                                        {{ ai_data | tojson }}
+                                    </script>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="result-footer">
+            <div class="timeline-container">
+                <div class="timeline-title">
+                    <span class="badge">5</span> 타임라인
+                </div>
+                <div class="timeline-controls" style="position: relative; height: 44px;">
+                    <div style="display: flex; align-items: center; width: 100%; position: relative; z-index: 1; margin-top:16px;">
+                        <button id="play-toggle">▶️</button>
+                        <button id="mute-toggle">🔊</button>
+                        <input 
+                            type="range" 
+                            id="timeline-slider" 
+                            min="0" max="100" value="0" step="0.01"
+                            style="flex-grow: 1; margin: 0 10px; height: 10px;"
+                        />
+                        <span id="slider-tooltip" class="slider-tooltip" hidden>0:00</span>
+                        <span id="time-display" style="min-width: 80px;">0:00 / 0:00</span>
+                        <audio 
+                            id="audio-player"
+                            src="{{ url_for('uploaded_file', filename=audio_filename) }}" 
+                            style="display:none;"
+                        ></audio>
+                    </div>
+                </div>
+                <div id="current-page-display" style="margin-top: 10px; font-size: 16px; text-align: center;">
+                    현재 페이지: -
+                </div>
+            </div>
+
+            <script>
+                const audio = document.getElementById('audio-player');
+                const playToggle = document.getElementById('play-toggle');
+                const muteToggle = document.getElementById('mute-toggle');
+                const slider = document.getElementById('timeline-slider');
+                const timeDisplay = document.getElementById('time-display');
+                const currentPageDisplay = document.getElementById('current-page-display');
+                let lastPage = -1;
+                function formatTime(seconds) {
+                    const minutes = Math.floor(seconds / 60);
+                    const secs = Math.floor(seconds % 60);
+                    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+                }
+
+                audio.addEventListener('timeupdate', () => {
+                const currentTime = audio.currentTime;
+                slider.value = (currentTime / audio.duration) * 100 || 0;
+                timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(audio.duration)}`;
+
+                // 현재 재생 시간 서버로 전송
+                fetch('/current_page', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ current_time: currentTime })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const currentPage = data.current_page;
+                    if (currentPage !== null) {
+                        if (currentPage !== lastPage) {
+                            console.log(`페이지 변경 감지: ${lastPage} → ${currentPage}`);
+
+                            // 페이지 변경 시 실행할 함수
+                            updateGallery(currentPage+1);
+                            updatePage(currentPage);
+                            updatePage_ai(currentPage);
+                            //updateGallery(currentPage);
+                            // 이전 페이지 갱신
+                            lastPage = currentPage;
+                        }
+                        currentPageDisplay.textContent = `현재 페이지: ${currentPage}`;
+
+                        // 슬라이드 이미지 업데이트
+                        const slideImageContainer = document.getElementById('slide-image-container');
+                        const nextPageNumber = parseInt(currentPage) + 1;
+                        const imagePath = `/processed/${nextPageNumber}.png`; // PDF 이름 없이 경로 생성
+
+                        console.log(`Generated image path: ${imagePath}`); // 디버깅 로그
+
+                        // 기존 이미지 제거
+                        slideImageContainer.innerHTML = '';
+
+                        // 새 이미지 추가
+                        const img = document.createElement('img');
+                        img.src = imagePath;
+                        img.alt = `Page ${currentPage}`;
+                        img.style.maxWidth = '100%';
+                        img.style.height = 'auto';
+
+                        img.onerror = () => console.error(`Failed to load image: ${imagePath}`); // 이미지 로드 실패 디버깅 로그
+
+                        slideImageContainer.appendChild(img);
+                        // updatePage(currentPage);
+                    } else {
+                        currentPageDisplay.textContent = '현재 페이지: -';
+                    }
+                })
+                .catch(error => console.error('Error fetching current page:', error));
+            });
+
+                playToggle.addEventListener('click', () => {
+                    if (audio.paused) {
+                        audio.play();
+                        playToggle.textContent = '⏸️';
+                    } else {
+                        audio.pause();
+                        playToggle.textContent = '▶️';
+                    }
+                });
+
+                muteToggle.addEventListener('click', () => {
+                    audio.muted = !audio.muted;
+                    muteToggle.textContent = audio.muted ? '🔇' : '🔊';
+                });
+
+                slider.addEventListener('input', () => {
+                    audio.currentTime = (slider.value / 100) * audio.duration;
+                });
+            </script>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

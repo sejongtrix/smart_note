@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트 노트</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <!-- 헤더 -->
+            <div class="header" style="position:relative;">
+                <button onclick="window.location.href='{{ url_for('index_eng') }}'" style="position:absolute; top:10px; right:20px; z-index:10; padding:6px 16px; border-radius:5px; border:none; background:#1a73e8; color:white; font-weight:bold; cursor:pointer;">English</button>
+                <h1>스마트 노트</h1>
+            </div>
+
+            <!-- 업로드 섹션 -->
+            <div class="upload-section">
+                <div class="upload-category">
+                    <div class="category-header">
+                        <label>강의 영상 (최대 1개)</label>
+                        <button class="add-file-btn" id="add-video-btn" onclick="addVideoUpload()">
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div class="file-uploads-container" id="video-uploads-container">
+                        <div class="file-upload-item">
+                            <input type="file" class="video-input" accept=".mp4,.avi,.mov,.mkv" style="display: none;">
+                            <button class="file-type-btn" onclick="this.previousElementSibling.click()">
+                                Mp4 파일 업로드
+                            </button>
+                            <button class="remove-file-btn" onclick="removeFileUpload(this)" style="display: none;">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-category">
+                    <div class="category-header">
+                        <label>강의 교안 (최대 1개)</label>
+                        <button class="add-file-btn" id="add-pdf-btn" onclick="addPDFUpload()">
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div class="file-uploads-container" id="pdf-uploads-container">
+                        <div class="file-upload-item">
+                            <input type="file" class="pdf-input" accept=".pdf" style="display: none;">
+                            <button class="file-type-btn" onclick="this.previousElementSibling.click()">
+                                PDF 파일 업로드
+                            </button>
+                            <button class="remove-file-btn" onclick="removeFileUpload(this)" style="display: none;">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 진행도 표시바 -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text">진행도 표시바</div>
+            </div>
+
+            <!-- 로딩 오버레이 -->
+            <div class="loading-overlay" id="loading-overlay" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">처리 중입니다...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

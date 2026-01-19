@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Note</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header" style="position:relative;">
+                <button onclick="window.location.href='{{ url_for('index') }}'" style="position:absolute; top:10px; right:20px; z-index:10; padding:6px 16px; border-radius:5px; border:none; background:#1a73e8; color:white; font-weight:bold; cursor:pointer;">Korean</button>
+                <h1>Smart Note</h1>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-category">
+                    <div class="category-header">
+                        <label>Lecture Video (Max 1 file)</label>
+                        <button class="add-file-btn" id="add-video-btn" onclick="addVideoUpload()">
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div class="file-uploads-container" id="video-uploads-container">
+                        <div class="file-upload-item">
+                            <input type="file" class="video-input" accept=".mp4,.avi,.mov,.mkv" style="display: none;">
+                            <button class="file-type-btn" onclick="this.previousElementSibling.click()">
+                                Upload Mp4 File
+                            </button>
+                            <button class="remove-file-btn" onclick="removeFileUpload(this)" style="display: none;">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-category">
+                    <div class="category-header">
+                        <label>Lecture PDF (Max 1 file)</label>
+                        <button class="add-file-btn" id="add-pdf-btn" onclick="addPDFUpload()">
+                            <span>+</span>
+                        </button>
+                    </div>
+                    <div class="file-uploads-container" id="pdf-uploads-container">
+                        <div class="file-upload-item">
+                            <input type="file" class="pdf-input" accept=".pdf" style="display: none;">
+                            <button class="file-type-btn" onclick="this.previousElementSibling.click()">
+                                Upload PDF File
+                            </button>
+                            <button class="remove-file-btn" onclick="removeFileUpload(this)" style="display: none;">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text">Progress Bar</div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loading-overlay" style="display: none;">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Processing...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main_eng.js') }}"></script>
+</body>
+</html>
