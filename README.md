@@ -50,17 +50,17 @@
 * `model_full.pth`로 예측하여 파일명에 `_class`를 붙여 저장합니다.
 * 결과 이미지는 `static/output_images/`에 저장됩니다.
 
-### E. (옵션) 이미지 → 3D (Meshy API)
+### E. 이미지 → 3D (Meshy API)
 
 * 입력 이미지(Data URI)를 Meshy Image-to-3D로 전송하여 FBX 생성
 * 생성된 FBX를 다운로드 후 Selenium으로 웹 뷰어에 업로드합니다.
 
 ---
 
-## 2) 프로젝트 구조(예시)
+## 2) 프로젝트 구조
 
 ```bash
-project/
+website/
 ├─ app.py                     # Flask 서버 (업로드/결과/3D 등)
 ├─ analysis.py                 # 전사/요약/PDF처리/슬라이드매칭/이미지추출
 ├─ templates/
