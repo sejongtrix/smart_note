@@ -335,24 +335,6 @@ def summarize_content():
         
         # 임시 모의 요약 결과
         final_summary = f"""
-        텍스트 요약 결과 (임시 모의 데이터):
-
-        주요 내용:
-        - 인공지능의 기초 개념과 원리
-        - 머신러닝과 딥러닝의 차이점
-        - 실제 산업 응용 사례들
-        - AI 기술의 미래 발전 방향
-
-        핵심 포인트:
-        1. 데이터의 중요성과 전처리 과정
-        2. 다양한 알고리즘의 선택 기준
-        3. 모델 평가와 최적화 방법
-        4. 윤리적 AI 개발의 필요성
-
-        결론:
-        인공지능은 현대 사회에 혁신적인 변화를 가져오고 있으며, 지속적인 연구와 개발이 필요합니다.
-
-        (실제 LLM 모델 설치 후 실제 요약 기능이 동작합니다)
         """
         
         return jsonify({
@@ -389,7 +371,6 @@ def current_page():
 
     return jsonify({"current_page": current_page})
 
-################## 여긴 해림님의 코드 ############################
 import mimetypes
 def image_to_data_uri(path):
     print(path)
@@ -404,7 +385,6 @@ def image_to_data_uri(path):
     return f"data:{mime_type};base64,{encoded}"
 
 #API_KEY = "msy_dummy_api_key_for_test_mode_12345678"  # Test API key
-API_KEY = "msy_x7YOddddBotIhwDmRKtK7GgUQ5JCE15DOoGA"
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
@@ -516,7 +496,6 @@ def generate_3d_model():
         return jsonify({'error': f'3D 모델 생성 중 오류가 발생했습니다: {str(e)}'}), 500
 
 
-###########해림님의 코드
 
 
 
