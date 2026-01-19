@@ -1,0 +1,557 @@
+﻿page,text
+0,"나동빈
+자연어처리: 트랜스포머
+Transformer (Attention Is All You Need)
+나동빈(dongbinna@postech.ac.kr)
+Pohang University of Science and Technology"
+1,"나동빈
+딥러닝기반의기계번역발전과정
+• 2021년기준으로최신고성능모델들은Transformer 아키텍처를기반으로하고있습니다.
+• GPT: Transformer의디코더(Decoder) 아키텍처를활용
+• BERT: Transformer의인코더(Encoder) 아키텍처를활용
+GPT-1
+(2018)
+BERT
+(NAACL 2019)
+Transformer
+(NIPS 2017)
+Attention
+(ICLR 2015)
+LSTM
+(1997)
+Seq2Seq
+(NIPS 2014)
+RNN
+(1986)
+고정된크기의
+context vector 사용
+입력시퀀스전체에서정보를추출하는방향으로발전
+GPT-3
+(2020)"
+2,"나동빈
+기존Seq2Seq 모델들의한계점
+• context vector 𝑣에소스문장의정보를압축합니다.
+• 병목(bottleneck)이발생하여성능하락의원인이됩니다.
+Sequence to Sequence Learning with Neural Networks (NIPS 2014)
+임베딩
+임베딩
+임베딩
+임베딩
+<sos>
+guten
+abend
+<eos>
+임베딩
+임베딩
+임베딩
+<sos>
+good
+evening
+𝑦1: good
+독일어
+영어
+𝑣
+RNN
+ℎ1
+ℎ0
+RNN
+ℎ2
+RNN
+ℎ3
+RNN
+ℎ4
+RNN
+RNN
+RNN
+𝑠1
+𝑠2
+𝑠3
+FC
+𝑦2: evening
+FC
+𝑦3: <eos>
+FC
+고정된크기
+context vector"
+3,"나동빈
+기존Seq2Seq 모델들의한계점
+• 디코더가context vector를매번참고할수도있습니다.
+• 다만여전히소스문장을하나의벡터에압축해야합니다.
+Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation (EMNLP 2014)
+고정된크기
+context vector
+임베딩
+임베딩
+임베딩
+임베딩
+<sos>
+guten
+abend
+<eos>
+임베딩
+임베딩
+임베딩
+<sos>
+good
+evening
+𝑦1: good
+독일어
+𝑣
+RNN
+ℎ1
+ℎ0
+RNN
+ℎ2
+RNN
+ℎ3
+RNN
+ℎ4
+RNN
+RNN
+RNN
+FC
+𝑦2: evening
+FC
+𝑦3: <eos>
+FC
+𝑠1
+𝑠2
+𝑠3"
+4,"나동빈
+Seq2Seq with Attention
+• 하나의문맥벡터가소스문장의모든정보를가지고있어야하므로성능이저하됩니다.
+Neural Machine Translation by Jointly Learning to Align and Translate (ICLR 2015)
+• 그렇다면매번소스문장에서의출력전부를입력으로받으면어떨까요?
+• 최신GPU는많은메모리와빠른병렬처리를지원합니다.
+[ 문제상황]
+[ 해결방안]"
+5,"나동빈
+Seq2Seq with Attention
+• Seq2Seq 모델에어텐션(attention) 매커니즘을사용합니다.
+• 디코더는인코더의모든출력(outputs)을참고합니다.
+Neural Machine Translation by Jointly Learning to Align and Translate (ICLR 2015)
+고정된크기
+context vector
+임베딩
+임베딩
+임베딩
+임베딩
+<sos>
+guten
+abend
+<eos>
+임베딩
+<sos>
+𝑦1: good
+독일어
+𝑣
+RNN
+ℎ1
+ℎ0
+RNN
+ℎ2
+RNN
+ℎ3
+RNN
+ℎ4
+RNN
+FC
+𝑠1
+𝑤"
+6,"나동빈
+Seq2Seq with Attention: 디코더(Decoder)
+• 에너지(Energy)
+Neural Machine Translation by Jointly Learning to Align and Translate (ICLR 2015)
+• 가중치(Weight)
+• 디코더는매번인코더의모든출력중에서어떤정보가중요한지를계산합니다.
+• i = 현재의디코더가처리중인인덱스
+• j = 각각의인코더출력인덱스"
+7,"나동빈
+Seq2Seq with Attention: 디코더(Decoder)
+Neural Machine Translation by Jointly Learning to Align and Translate (ICLR 2015)
+인코더(Encoder)
+디코더(Decoder)
+• 에너지(Energy)
+• 가중치(Weight)
+Weighted sum 이용"
+8,"나동빈
+Seq2Seq with Attention: 어텐션시각화
+Neural Machine Translation by Jointly Learning to Align and Translate (ICLR 2015)
+• 어텐션(attention) 가중치를사용해각출력이어떤입력정보를참고했는지알수있습니다.
+• English →French"
+9,"나동빈
+트랜스포머(Transformer)
+• 2021년기준으로현대의자연어처리네트워크에서핵심이되는논문입니다.
+• 논문의원제목은Attention Is All You Need입니다.
+• 트랜스포머는RNN이나CNN을전혀필요로하지않습니다.
+Attention is All You Need (NIPS 2017)"
+10,"트랜스포머(Transformer)
+• 트랜스포머는RNN이나CNN을전혀사용하지않습니다.
+• 대신Positional Encoding을사용합니다.
+• BERT와같은향상된네트워크에서도채택되고있습니다.
+• 인코더와디코더로구성됩니다.
+• Attention 과정을여러레이어에서반복합니다.
+Attention is All You Need (NIPS 2017)"
+11,"나동빈
+트랜스포머의동작원리: 입력값임베딩(Embedding)
+Attention is All You Need (NIPS 2017)
+• 트랜스포머이전의전통적인임베딩은다음과같습니다.
+Input Embedding Matrix
+I
+am
+a
+teacher"
+12,"나동빈
+트랜스포머의동작원리: 입력값임베딩(Embedding)
+Attention is All You Need (NIPS 2017)
+• RNN을사용하지않으려면위치정보를포함하고있는임베딩을사용해야합니다.
+• 이를위해트랜스포머에서는Positional Encoding을사용합니다.
+Input Embedding Matrix
+I
+am
+a
+teacher
+Positional Encoding
++"
+13,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)
+Attention is All You Need (NIPS 2017)
+• 임베딩이끝난이후에어텐션(Attention)을진행합니다.
+Positional Encoding
++
+Multi-head Attention
+Input Embedding Matrix
+I
+am
+a
+teacher"
+14,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)
+Attention is All You Need (NIPS 2017)
+• 성능향상을위해잔여학습(Residual Learning)을사용합니다.
+Input Embedding Matrix
+I
+am
+a
+teacher
+Positional Encoding
++
+Multi-head Attention
+Add + Norm"
+15,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)
+Attention is All You Need (NIPS 2017)
+• 어텐션(Attention)과정규화(Normalization) 과정을반복합니다.
+• 각레이어는서로다른파라미터를가집니다.
+Multi-head Attention
+Add + Norm
+Feedforward Layer
+Add + Norm
+Same Operations
+Same Operations
+…
+Layer 1
+Layer 2
+Layer N"
+16,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)와디코더(Decoder)
+Attention is All You Need (NIPS 2017)
+Multi-head Attention
+Add + Norm
+Feedforward Layer
+Add + Norm
+Same Operations
+Same Operations
+…
+Layer 1
+Layer 2
+Layer N
+<begin>
+Output Embedding Matrix
+Positional Encoding
++
+Multi-head Attention
+Add + Norm
+Multi-head Attention
+Add + Norm
+Feedforward Layer
+Add + Norm
+Layer 1"
+17,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)와디코더(Decoder)
+Attention is All You Need (NIPS 2017)
+• 트랜스포머에서는마지막인코더레이어의출력이모든디코더레이어에입력됩니다.
+• n_layers = 4일때의예시는다음과같습니다.
+Encoder #4
+Encoder #3
+Encoder #2
+Encoder #1
+Decoder #4
+Decoder #3
+Decoder #2
+Decoder #1
+트랜스포머(Transformer) 아키텍처"
+18,"나동빈
+트랜스포머의동작원리: 인코더(Encoder)와디코더(Decoder)
+Attention is All You Need (NIPS 2017)
+• 트랜스포머에서도인코더(Encoder)와디코더(Decoder)의구조를따릅니다.
+• 이때RNN을사용하지않으며인코더와디코더를다수사용한다는점이특징입니다.
+• <eos>가나올때까지디코더를이용합니다.
+Encoders
+Decoders
+임베딩
+임베딩
+임베딩
+임베딩
+<sos>
+guten
+abend
+<eos>
+임베딩
+임베딩
+임베딩
+<sos>
+good
+evening
+good
+evening <eos>
+독일어
+영어"
+19,"나동빈
+트랜스포머의동작원리: 어텐션(Attention)
+Attention is All You Need (NIPS 2017)
+• 인코더와디코더는Multi-Head Attention 레이어를사용합니다.
+• 어텐션을위한세가지입력요소
+• 쿼리(Query)
+• 키(Key)
+• 값(Value)
+Multi-Head Attention
+Scaled Dot-Product Attention"
+20,"나동빈
+트랜스포머의동작원리: 어텐션(Attention)
+Attention is All You Need (NIPS 2017)
+• 인코더와디코더는Multi-Head Attention 레이어를사용합니다.
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛𝑄, 𝐾, 𝑉= 𝑠𝑜𝑓𝑡𝑚𝑎𝑥
+𝑄𝐾𝑇
+𝑑𝑘
+𝑉
+ℎ𝑒𝑎𝑑𝑖= 𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛(𝑄𝑊𝑖
+𝑄, 𝐾𝑊𝑖
+𝐾, 𝑉𝑊𝑖
+𝑉)
+𝑀𝑢𝑙𝑡𝑖𝐻𝑒𝑎𝑑𝑄, 𝐾, 𝑉= 𝐶𝑜𝑛𝑐𝑎𝑡ℎ𝑒𝑎𝑑1, … , ℎ𝑒𝑎𝑑ℎ𝑊𝑂
+Multi-Head Attention
+h: 헤드(head)의개수"
+21,"나동빈
+트랜스포머의동작원리(하나의단어): 쿼리(Query), 키(Key), 값(Value)
+Attention is All You Need (NIPS 2017)
+• 어텐션을위해쿼리(Query), 키(Key), 값(Value)이필요합니다.
+• 각단어의임베딩(Embedding)을이용해생성할수있습니다.
+• 임베딩차원(𝑑𝑚𝑜𝑑𝑒𝑙) →𝑄𝑢𝑒𝑟𝑦, 𝐾𝑒𝑦, 𝑉𝑎𝑙𝑢𝑒차원(𝑑𝑚𝑜𝑑𝑒𝑙/ ℎ)
+love
+× 𝑊𝑄𝑢𝑒𝑟𝑦(4 × 2)
+× 𝑊𝐾𝑒𝑦(4 × 2)
+× 𝑊𝑉𝑎𝑙𝑢𝑒(4 × 2)
+𝑄𝑢𝑒𝑟𝑦𝑙𝑜𝑣𝑒
+𝐾𝑒𝑦𝑙𝑜𝑣𝑒
+𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒"
+22,"나동빈
+트랜스포머의동작원리(하나의단어): Scaled Dot-Product Attention
+Attention is All You Need (NIPS 2017)
+• 𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛𝑄, 𝐾, 𝑉= 𝑠𝑜𝑓𝑡𝑚𝑎𝑥
+𝑄𝐾𝑇
+𝑑𝑘𝑉
+𝑄𝑢𝑒𝑟𝑦𝐼
+× 𝐾𝑒𝑦𝐼
+𝑇
+× 𝐾𝑒𝑦𝑙𝑜𝑣𝑒
+𝑇
+× 𝐾𝑒𝑦𝑦𝑜𝑢
+𝑇
+𝑆
+72%
+15%
+13%
+∗𝑉𝑎𝑙𝑢𝑒𝐼
+∗𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒
+∗𝑉𝑎𝑙𝑢𝑒𝑦𝑜𝑢
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+/ 𝑑𝑘
+/ 𝑑𝑘
+/ 𝑑𝑘
++"
+23,"나동빈
+트랜스포머의동작원리(행렬): 쿼리(Query), 키(Key), 값(Value)
+Attention is All You Need (NIPS 2017)
+• 실제로는행렬(matrix) 곱셈연산을이용해한꺼번에연산이가능합니다.
+I
+love
+you
+× 𝑊𝑄𝑢𝑒𝑟𝑦(4 × 2)
+× 𝑊𝐾𝑒𝑦(4 × 2)
+× 𝑊𝑉𝑎𝑙𝑢𝑒(4 × 2)
+𝑄𝑢𝑒𝑟𝑦𝐼
+𝑄𝑢𝑒𝑟𝑦𝑙𝑜𝑣𝑒
+𝑄𝑢𝑒𝑟𝑦𝑦𝑜𝑢
+𝐾𝑒𝑦𝐼
+𝐾𝑒𝑦𝑙𝑜𝑣𝑒
+𝐾𝑒𝑦𝑦𝑜𝑢
+𝑉𝑎𝑙𝑢𝑒𝐼
+𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒
+𝑉𝑎𝑙𝑢𝑒𝑦𝑜𝑢"
+24,"나동빈
+트랜스포머의동작원리(행렬): Scaled Dot-Product Attention
+Attention is All You Need (NIPS 2017)
+• 𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛𝑄, 𝐾, 𝑉= 𝑠𝑜𝑓𝑡𝑚𝑎𝑥
+𝑄𝐾𝑇
+𝑑𝑘𝑉
+𝑄𝑢𝑒𝑟𝑦𝐼
+𝑄𝑢𝑒𝑟𝑦𝑙𝑜𝑣𝑒
+𝑄𝑢𝑒𝑟𝑦𝑦𝑜𝑢
+𝐾𝐼𝐾𝑙𝑜𝑣𝑒𝐾𝑦𝑜𝑢
+=
+×
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛𝑄, 𝐾, 𝑉=
+𝑠𝑜𝑓𝑡𝑚𝑎𝑥
+𝑄𝐾𝑇
+𝑑𝑘
+𝑉𝑎𝑙𝑢𝑒𝐼
+𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒
+𝑉𝑎𝑙𝑢𝑒𝑦𝑜𝑢
+𝑉
+×
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+=
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+𝐸𝑛𝑒𝑟𝑔𝑖𝑒𝑠
+𝑦𝑜𝑢
+𝑙𝑜𝑣𝑒
+𝐼
+𝐼
+𝑙𝑜𝑣𝑒
+𝑦𝑜𝑢"
+25,"나동빈
+트랜스포머의동작원리(행렬): Scaled Dot-Product Attention
+Attention is All You Need (NIPS 2017)
+𝑄𝐾𝑇=
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+𝐸𝑛𝑒𝑟𝑔𝑖𝑒𝑠
+• 마스크행렬(mask matrix)를이용해특정단어는무시할수있도록합니다.
+𝐼
+𝑙𝑜𝑣𝑒𝑦𝑜𝑢
+𝐼
+𝑙𝑜𝑣𝑒
+𝑦𝑜𝑢
+𝑀𝑎𝑠𝑘
+𝑀𝑎𝑡𝑟𝑖𝑥
+𝐼
+𝑙𝑜𝑣𝑒𝑦𝑜𝑢
+𝐼
+𝑙𝑜𝑣𝑒
+𝑦𝑜𝑢
+∗
+• 마스크값으로음수무한의값을넣어𝑠𝑜𝑓𝑡𝑚𝑎𝑥함수의출력이0%에가까워지도록합니다."
+26,"나동빈
+트랜스포머의동작원리: Multi-Head Attention
+Attention is All You Need (NIPS 2017)
+• 𝑀𝑢𝑙𝑡𝑖𝐻𝑒𝑎𝑑𝑄, 𝐾, 𝑉= 𝐶𝑜𝑛𝑐𝑎𝑡ℎ𝑒𝑎𝑑1, … , ℎ𝑒𝑎𝑑ℎ𝑊𝑂
+I
+love
+you
+𝑄𝑢𝑒𝑟𝑦𝐼
+𝑄𝑢𝑒𝑟𝑦𝑙𝑜𝑣𝑒
+𝑄𝑢𝑒𝑟𝑦𝑦𝑜𝑢
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+ℎ𝑒𝑎𝑑1
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛
+𝐾𝑒𝑦𝐼
+𝐾𝑒𝑦𝑙𝑜𝑣𝑒
+𝐾𝑒𝑦𝑦𝑜𝑢
+𝑉𝑎𝑙𝑢𝑒𝐼
+𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒
+𝑉𝑎𝑙𝑢𝑒𝑦𝑜𝑢
+𝑄𝑢𝑒𝑟𝑦𝐼
+𝑄𝑢𝑒𝑟𝑦𝑙𝑜𝑣𝑒
+𝑄𝑢𝑒𝑟𝑦𝑦𝑜𝑢
+ℎ𝑒𝑎𝑑2
+𝐾𝑒𝑦𝐼
+𝐾𝑒𝑦𝑙𝑜𝑣𝑒
+𝐾𝑒𝑦𝑦𝑜𝑢
+𝑉𝑎𝑙𝑢𝑒𝐼
+𝑉𝑎𝑙𝑢𝑒𝑙𝑜𝑣𝑒
+𝑉𝑎𝑙𝑢𝑒𝑦𝑜𝑢
+ℎ𝑒𝑎𝑑ℎ
+…"
+27,"나동빈
+트랜스포머의동작원리: Multi-Head Attention
+Attention is All You Need (NIPS 2017)
+• 𝑀𝑢𝑙𝑡𝑖𝐻𝑒𝑎𝑑𝑄, 𝐾, 𝑉를수행한뒤에도차원(dimension)이동일하게유지됩니다.
+ℎ𝑒𝑎𝑑1
+ℎ𝑒𝑎𝑑2
+ℎ𝑒𝑎𝑑3
+ℎ𝑒𝑎𝑑ℎ
+…
+𝐶𝑜𝑛𝑐𝑎𝑡ℎ𝑒𝑎𝑑1, … , ℎ𝑒𝑎𝑑ℎ=
+𝑑𝑚𝑜𝑑𝑒𝑙= 𝑑𝑣× ℎ
+𝑀𝑢𝑙𝑡𝑖𝐻𝑒𝑎𝑑𝑄, 𝐾, 𝑉=
+𝑑𝑚𝑜𝑑𝑒𝑙= 𝑑𝑣× ℎ
+𝑠𝑒𝑞_𝑙𝑒𝑛×
+𝑑𝑚𝑜𝑑𝑒𝑙
+𝑑𝑚𝑜𝑑𝑒𝑙"
+28,"나동빈
+트랜스포머의동작원리: 어텐션(Attention)의종류
+Attention is All You Need (NIPS 2017)
+• 트랜스포머에서는세가지종류의어텐션(attention) 레이어가사용됩니다.
+Encoder Self-Attention:
+Masked Decoder Self-Attention:
+Encoder-Decoder Attention:"
+29,"나동빈
+트랜스포머의동작원리: Self-Attention
+Attention is All You Need (NIPS 2017)
+• Self-Attention은인코더와디코더모두에서사용됩니다.
+• 매번입력문장에서각단어가다른어떤단어와연관성이높은지계산할수있습니다.
+A boy who is looking at the tree is surprised because it was too tall.
+A boy who is looking at the tree is surprised because it was too tall."
+30,"나동빈
+트랜스포머의동작원리: Positional Encoding
+Attention is All You Need (NIPS 2017)
+• Positional Encoding은다음과같이주기함수를활용한공식을사용합니다.
+• 각단어의상대적인위치정보를네트워크에게입력합니다.
+𝑃𝐸𝑝𝑜𝑠,2𝑖= sin(𝑝𝑜𝑠/100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙)
+𝑃𝐸𝑝𝑜𝑠,2𝑖+1 = cos(𝑝𝑜𝑠/100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙)
+: 사인(sine) 주기함수예시"
+31,"나동빈
+트랜스포머의동작원리: Positional Encoding
+Attention is All You Need (NIPS 2017)
+• Positional Encoding은다음과같이주기함수를활용한공식을사용합니다.
+𝑃𝐸𝑝𝑜𝑠,2𝑖= sin(𝑝𝑜𝑠/100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙)
+𝑃𝐸𝑝𝑜𝑠,2𝑖+1 = cos(𝑝𝑜𝑠/100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙)
++
+일반임베딩
+위치인코딩(Positional Encoding)
+𝑑𝑚𝑜𝑑𝑒𝑙
+𝑝𝑜𝑠, 𝑖
+We
+are
+the
+one"
+32,"나동빈
+트랜스포머의동작원리: Positional Encoding
+Attention is All You Need (NIPS 2017)
+import math
+import matplotlib.pyplot as plt
+n = 4 # 단어(word)의개수
+dim = 8 # 임베딩(embedding) 차원
+def get_angles(pos, i, dim):
+angles = 1 / math.pow(10000, (2 * (i // 2)) / dim)
+return pos * angles
+def get_positional_encoding(pos, i, dim):
+if i % 2 == 0: # 짝수인경우사인함수
+return math.sin(get_angles(pos, i, dim))
+# 홀수인경우코사인함수
+return math.cos(get_angles(pos, i, dim))
+result = [[0] * dim for _ in range(n)]
+for i in range(n):
+for j in range(dim):
+result[i][j] = get_positional_encoding(i, j, dim)
+출력결과: plt.pcolormesh(result, cmap='Blues')"
